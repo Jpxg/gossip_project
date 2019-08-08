@@ -1,8 +1,9 @@
 class User < ApplicationRecord
-  belongs_to :city
-  has_many :gossips
-  has_many :comments
-  has_many :likes
-  has_many :sent_messages, foreign_key: 'sender_id', class_name: "PrivateMessage"
-  has_many :received_messages, foreign_key: 'recipient_id', class_name: "PrivateMessageRecipient"
+    belongs_to :city, optional: true
+    has_many :gossips
+    validates_associated :gossips
+    has_many :comments
+    validates_associated :comments
+    validates_presence_of :first_name, :last_name, :email
+    has_secure_password
 end

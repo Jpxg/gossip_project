@@ -1,30 +1,33 @@
 
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <h1 class='text-center'><%= @user.first_name %> <%= @user.last_name %></h1>
-    <div class="container">
-      <% @user.gossips.each do |gossip| %>
-        <div class="card my-4 text-white bg-success">
-          <div class="card-body">
-            <div class="container">
-              <div class="row h-100">
-                <div class="col-lg-1 my-auto text-center">
-                    <i class="fas fa-comments fa-3x"></i>
-                </div>
-                <div class="col-lg-11 my-2 text-justify">
-                  <h5 class="card-title"><%= gossip.title %></h5>
-                  <p class="card-text"><%= gossip.content %></p>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container text-center">
+        <h1 class="display-3 text-primary"><%= @user.first_name%> <%= @user.last_name%></h1>
+        <p>profil</p>
+        <p>toute les infos sur cette auteur</p>
         </div>
-      <% end %>
-    </div>
-  </body>
-</html>
+      </div>
+      <div class="text-center">
+        <p>email : <%=@user.email%></p>
+        <p>age : <%=@user.age%></p>
+        <p>ville : <%=
+            if @user.city == nil 
+                "pas de ville associer"
+            else
+                link_to @user.city.name, city_path(@user.city_id)
+            end
+            %></p>
+        <p>description : <%=
+            if @user.description == nil
+                "pas encore de description"
+            else
+                @user.description
+            end
+        %></p>
+        <p>Ses potins : 
+        <% @user.gossips.each do |g|%>
+            <%= link_to g.title, gossip_path(g.id)%> 
+        <%end%>
+        </p>
+        </div>
+

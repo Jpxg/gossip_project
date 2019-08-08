@@ -1,29 +1,38 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <div class="container">
-      <h1 class='text-center  pb-4 mb-4'>Le gossip: </h1>
-      <div class="card  mt-4 mb-4 bg-light border-success">
-        <div class="row no-gutters">
-          <div class="col-3 col-sm-2 m-auto text-center">
-            <i class="fas fa-comments fa-4x text-success"></i>
-          </div>
-          <div class="col-9 col-sm-10">
-            <div class="card-body">
-              <h5 class="card-title"><%= @gossip.user.first_name %> <%= @gossip.user.last_name %></h5>
-              <p class="card-text"><%= @gossip.title %></p>
-              <p class="card-text"><%= @gossip.content %></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class='row justify-content-around'>
-      <div class='col-4 btn btn-success'><%= link_to "Aller sur la page de l'auteur", user_id_path(@gossip.user.id) %></div>
-      <div class='col-4 btn btn-success'><%= link_to "Retourner à la liste des gossips", "/welcome/#{session[:username]}" %></div>
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1 class="display-3 text-primary"><%= @gossip.title%></h1>
+        <h3>de <%=link_to "#{@gossip.user.first_name} #{@gossip.user.last_name}", user_path(@gossip.user.id)%><h3>
     </div>
-  </body>
-</html>
+</div>
+<div class="container text-center">
+    <p>potin : <%=@gossip.content%></p>
+    <p>date : <%= @gossip.created_at%></p>
+    <% if session[:user_id] == @gossip.user.id %>
+        <p><%= link_to "edit", edit_gossip_path%></p>
+        <p><%= link_to "supprimer", gossip_path(@gossip.id), method: 'delete'%>
+    <%end%>
+</div>
+<hr>
+<div class="container">
+    <p>commentaires : </p>
+    <% @gossip.comments.each do |c| %>
+        <p>de : <%= c.user.first_name%> <%= c.user.last_name%></p>
+        <p>=> <%= c.content%></p>
+        <% if session[:user_id] == c.user.id %>
+            <%= link_to "supprimer", gossip_comment_path(@gossip.id, c.id), method: 'delete'%>
+        <% end %>
+    <%end%>
+    <%if session[:user_id] != nil %>
+        <%= form_tag(gossip_comments_path(@gossip.id)) do %>
+            <%= label_tag 'Ajouter un commentaire' %>
+            <%= text_field_tag :content%>
+            <%= hidden_field_tag :id, params[:id] %>
+            <br /> <br />
+            <!-- L'auteur est renseigné dans le create -->
+            <%= submit_tag "Envoi", class: 'btn btn-success' %>
+        <%end%>
+    <%end%>
+</div>
+
